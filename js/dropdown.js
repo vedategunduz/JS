@@ -30,6 +30,23 @@ class Dropdown {
 
         trigger.setAttribute('aria-expanded', 'true');
         target.setAttribute('aria-hidden', 'false');
+        target.classList.remove('hidden');
+
+        let windowWidth = window.innerWidth;
+        let targetWidth = target.offsetWidth;
+        let triggerWidth = trigger.offsetWidth;
+
+        if (windowWidth < targetWidth + triggerWidth) {
+            target.style.left = `${windowWidth - targetWidth}px`;
+        } else {
+            let x = trigger.getBoundingClientRect().left;
+            let y = trigger.getBoundingClientRect().bottom;
+
+            target.style.left = `${x}px`;
+            target.style.top = `${y}px`;
+        }
+
+
 
         this.closeOtherTargets(target);
     }
@@ -43,6 +60,7 @@ class Dropdown {
 
         trigger.setAttribute('aria-expanded', 'false');
         target.setAttribute('aria-hidden', 'true');
+        target.classList.add('hidden');
     }
 
     closeOtherTargets(targetEl) {
@@ -53,6 +71,7 @@ class Dropdown {
                 return;
 
             target.setAttribute('aria-hidden', 'true');
+            target.classList.add('hidden');
 
             target.querySelectorAll('[role="menuitem"]').forEach(menuitem => {
                 menuitem.setAttribute('tabindex', '-1');
@@ -67,6 +86,7 @@ class Dropdown {
 
             targets.forEach(target => {
                 target.setAttribute('aria-hidden', 'true');
+                target.classList.add('hidden');
 
                 target.querySelectorAll('[role="menuitem"]').forEach(menuitem => {
                     menuitem.setAttribute('tabindex', '-1');
