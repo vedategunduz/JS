@@ -30,23 +30,30 @@ class Dropdown {
 
         trigger.setAttribute('aria-expanded', 'true');
         target.setAttribute('aria-hidden', 'false');
+
         target.classList.remove('hidden');
 
-        let windowWidth = window.innerWidth;
-        let targetWidth = target.offsetWidth;
-        let triggerWidth = trigger.offsetWidth;
+        let x = trigger.getBoundingClientRect().left;
+        let y = trigger.getBoundingClientRect().bottom;
 
-        if (windowWidth < targetWidth + triggerWidth) {
+        const targetWidth = target.offsetWidth;
+        const targetHeight = target.offsetHeight;
+
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        if (x + targetWidth > windowWidth) {
             target.style.left = `${windowWidth - targetWidth}px`;
         } else {
-            let x = trigger.getBoundingClientRect().left;
-            let y = trigger.getBoundingClientRect().bottom;
-
             target.style.left = `${x}px`;
-            target.style.top = `${y}px`;
         }
 
-
+        if (y + targetHeight > windowHeight) {
+            target.style.top = `${windowHeight - targetHeight}px`;
+        }
+        else {
+            target.style.top = `${y}px`;
+        }
 
         this.closeOtherTargets(target);
     }
@@ -81,6 +88,7 @@ class Dropdown {
 
     handleOutsideClick(event) {
         if (!event.target.closest('[data-dropdown-trigger], [data-dropdown-target]')) {
+
             const targets = document.querySelectorAll('[data-dropdown-target][aria-hidden="false"]');
             const triggers = document.querySelectorAll('[data-dropdown-trigger][aria-expanded="true"]');
 
